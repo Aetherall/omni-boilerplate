@@ -1,0 +1,27 @@
+{
+  "name": "omni-boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate with Hot reloading for Client and Server w/ webpack 4 !",
+  "scripts": {
+    "build": "webpack --config webpack/webpack.config.js",
+    "start": "node webpack/dist/server/server.js"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Elies Lou (Aetherall)",
+    "email": "elieslou.dev@gmail.com"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0-beta.42",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.42",
+    "babel-loader": "^8.0.0-beta",
+    "stats-webpack-plugin": "^0.6.2",
+    "webpack": "^4.1.1",
+    "webpack-bundle-analyzer": "^2.11.1",
+    "webpack-node-externals": "^1.6.0",
+    "write-file-webpack-plugin": "^4.2.0"
+  }
+}
