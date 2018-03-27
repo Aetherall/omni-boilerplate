@@ -10,12 +10,11 @@ const StatsPlugin = require('stats-webpack-plugin')
 
 const root = path.join(__dirname, '..');
 const dist = path.join(__dirname, 'dist');
-const entry = path.join(__dirname, 'entry');
 
-const clientEntry = path.join(entry, 'client');
+const clientEntry = path.join(root, 'client');
 const clientOutput = path.join(dist, 'client');
 
-const serverEntry = path.join(entry, 'server');
+const serverEntry = path.join(root, 'server');
 const serverOutput = path.join(dist, 'server');
 
 
@@ -23,8 +22,13 @@ const client = {
   name: 'client',
   target: 'web',
   mode: 'development',
-  devtool: 'source-map',
-  entry: ['@babel/polyfill', clientEntry],
+  devtool: 'inline-eval-cheap-source-map',
+  entry: [
+    '@babel/polyfill',
+    'react-hot-loader/patch',
+    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false',
+    clientEntry
+  ],
   output: {
     path: clientOutput,
     filename: 'client.js',
@@ -54,9 +58,8 @@ const server = {
   name: 'server',
   target: 'node',
   mode: 'development',
-  devtool: 'source-map',
-  entry: ['webpack/hot/poll?1000', serverEntry],
-  watch: true,
+  devtool: 'inline-eval-cheap-source-map',
+  entry: [serverEntry],
   externals: [nodeExternals({
     whitelist:[
       'webpack/hot/poll?1000',
@@ -84,7 +87,7 @@ const server = {
   },
   
   plugins: [
-    new WriteFilePlugin(),
+    new WriteFilePlugin({ test: /^(?!.*(hot)).*/ }),
     new webpack.HotModuleReplacementPlugin(),
    /*  new webpack.SourceMapDevToolPlugin({
       moduleFilenameTemplate: info => {
