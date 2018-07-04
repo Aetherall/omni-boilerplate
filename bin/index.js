@@ -1,7 +1,9 @@
 // ======================================
 // ------------- HOT SERVER -------------
 // ======================================
-//require('@babel/polyfill')
+require('./patchs/express-errors')
+
+const http = require('http')
 
 // Express Server
 const express = require('express')
@@ -10,10 +12,10 @@ const express = require('express')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
-const webpackHotServerMiddleware = require('webpack-hot-server-middleware')
+const webpackHotServerMiddleware = require('./webpack-hot-server-middleware')
 
 // Webpack Config
-const configs = require('../webpack.config')
+const configs = require('../webpack/webpack.config')
 
 // Creates Webpack compilers
 const compilers = webpack(configs)
@@ -25,7 +27,9 @@ const app = express()
 const webpackDevMiddlewareOptions = {
 	serverSideRender: true,
 	stats: {
-		colors: true
+		colors: true,
+		entrypoints: false,
+		modules: false
 	},
 	publicPath: '/',
 	watchOptions: {
@@ -44,8 +48,10 @@ app.use(webpackDevMiddlewareInstance)
 app.use(webpackHotMiddlewareInstance)
 app.use(webpackHotServerMiddlewareInstance)
 
-app.listen(5000, () => {
-	console.log('[ INIT ] => Server Started on port: 5000')
+global.server = http.createServer(app)
+
+server.listen(4000, () => {
+	console.log('[ INIT ] => Server Started on port: 4000')
 })
 
 process.on('error', e => {
